@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +13,7 @@ func TestTransferTxn(t *testing.T) {
 
 	account1 := createRadnomAccount(t)
 	account2 := createRadnomAccount(t)
+	fmt.Println(">> before:", account1.Balance, account2.Balance)
 
 	n := 5
 	amount := int64(10)
@@ -73,5 +75,26 @@ func TestTransferTxn(t *testing.T) {
 
 		_, err = store.GetEntry(context.Background(), toEntry.ID)
 		assert.NoError(t, err)
+
+		//check accounts
+		fromAccount := result.FromAccount
+		assert.NotEmpty(t, fromAccount)
+		assert.Equal(t, account1.ID, fromAccount.ID)
+
+		toAccount := result.ToAccount
+		assert.NotEmpty(t, toAccount)
+		assert.Equal(t, account2.ID, toAccount.ID)
+
+		//check balances
+		fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
+		diff1 := account1.Balance - fromAccount.Balance
+		diff2 := toAccount.Balance - account2.Balance
+
+		assert.Equal(t, diff1, diff2)
+		assert.True(t, diff1 > 0)
+		assert.True(t, diff1%amount == 0) // 1 * amount, 2 * amount, 3 * amount, ..., n
+
+		k := int(diff1 / amount)
+		assert.True(t, k >= 1 && k <= n)
 	}
 }
