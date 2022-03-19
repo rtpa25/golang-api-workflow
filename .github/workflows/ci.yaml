@@ -30,14 +30,17 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-      golang-migrate:
-        image: migrate/migrate
-
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install golang-migrate
+      run: |
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.linux-amd64.tar.gz | tar xvz
+        sudo mv migrate.linux-amd64 /usr/bin/migrate
+        which migrate
   
     - name: Run migrations
-      run: docker run -v {{ migration dir }}:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://localhost:5432/database up 2
+      run: migrate -path db/migration -database postgresql://root:secret@localhost:5430/simple_bank?sslmode=disable -verbose up
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -45,4 +48,4 @@ jobs:
         go-version: 1.17
 
     - name: Test
-      run: go test -v -cover ./...
+      run: go test -v -cover ./...v
