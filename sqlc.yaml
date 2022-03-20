@@ -9,3 +9,4 @@ packages:
     emit_prepared_queries: false
     emit_interface: true #create querier interface
     emit_exact_table_names: false #this option makes struct singular
+    emit_empty_slices: true
