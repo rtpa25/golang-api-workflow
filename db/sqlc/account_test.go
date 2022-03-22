@@ -77,21 +77,24 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func TestListAllAccounts(t *testing.T) {
+	var lastAccount Account
 	for i := 0; i < 10; i++ {
-		createRadnomAccount(t)
+		lastAccount = createRadnomAccount(t)
 	}
 
 	//skip first 5 and return next 5
 	args := ListAccountsParams{
+		Owner:  lastAccount.Owner,
 		Limit:  5,
-		Offset: 5,
+		Offset: 0,
 	}
 
 	accounts, err := testQueries.ListAccounts(context.Background(), args)
 	assert.NoError(t, err)
-	assert.Equal(t, 5, len(accounts))
+	assert.NotEmpty(t, accounts)
 
 	for _, account := range accounts {
 		assert.NotEmpty(t, account)
+		assert.Equal(t, account.Owner, lastAccount.Owner)
 	}
 }
