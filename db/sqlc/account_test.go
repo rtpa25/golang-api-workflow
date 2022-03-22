@@ -10,8 +10,9 @@ import (
 )
 
 func createRadnomAccount(t *testing.T) Account {
+	user := createRadnomUser(t)
 	arg := CreateAccountParams{
-		Owner:    utils.RadnomOwner(),
+		Owner:    user.Username,
 		Balance:  utils.RandomMoney(),
 		Currency: utils.RadomCurrency(),
 	}
