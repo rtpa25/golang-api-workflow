@@ -28,6 +28,7 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		}
 
 		fields := strings.Fields(authorizationHeader)
+		//it's of the type bearer -- token so if does not have atleast 2 words it means there aint any token
 		if len(fields) < 2 {
 			err := errors.New("authorization header is not provided")
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
@@ -35,6 +36,7 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		}
 
 		authorizationType := strings.ToLower(fields[0])
+		//only bearer type auth is allowed on our server
 		if authorizationType != authorizationTypeBearer {
 			err := fmt.Errorf("unsopported authorization type %s", authorizationType)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))

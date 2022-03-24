@@ -1,5 +1,6 @@
 {
   "yaml.schemas": {
-    "https://json.schemastore.org/yamllint.json": "file:///home/ronit/simple-banking/sqlc.yaml"
+    "https://json.schemastore.org/yamllint.json": "file:///home/ronit/simple-banking/sqlc.yaml",
+    "https://json.schemastore.org/github-workflow.json": "file:///home/ronit/simple-banking/.github/workflows/deploy.yaml"
   }
 }
